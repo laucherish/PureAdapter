@@ -1,0 +1,2 @@
+# pureadapter
+Pure RecyclerView Adapter
