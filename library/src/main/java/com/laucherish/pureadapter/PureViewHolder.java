@@ -23,6 +23,8 @@ public class PureViewHolder extends RecyclerView.ViewHolder {
      */
     private final SparseArray<View> mViews;
 
+    private PureAdapter adapter;
+
     public PureViewHolder(View itemView) {
         super(itemView);
         this.mViews = new SparseArray<>();
@@ -82,6 +84,17 @@ public class PureViewHolder extends RecyclerView.ViewHolder {
     public PureViewHolder setBackgroundRes(@IdRes int viewId, @DrawableRes int backgroundRes) {
         View view = getView(viewId);
         view.setBackgroundResource(backgroundRes);
+        return this;
+    }
+
+    public PureViewHolder setVisible(@IdRes int viewId, boolean visible) {
+        View view = getView(viewId);
+        view.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        return this;
+    }
+
+    protected PureViewHolder setAdapter(PureAdapter adapter) {
+        this.adapter = adapter;
         return this;
     }
 
