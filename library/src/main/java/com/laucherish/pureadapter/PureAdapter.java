@@ -490,6 +490,9 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
         return super.getItemViewType(position);
     }
 
+    /**
+     * 下拉加载更多回调接口
+     */
     public interface RequestLoadMoreListener {
 
         void onLoadMoreRequested();
