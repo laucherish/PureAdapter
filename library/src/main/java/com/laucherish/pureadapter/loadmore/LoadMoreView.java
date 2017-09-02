@@ -32,10 +32,7 @@ public abstract class LoadMoreView {
     }
 
     public final boolean isLoadEndMoreGone() {
-        if (getLoadEndViewId() == 0) {
-            return true;
-        }
-        return mLoadMoreEndGone;
+        return getLoadEndViewId() == 0 || mLoadMoreEndGone;
     }
 
     public void convert(PureViewHolder holder) {
