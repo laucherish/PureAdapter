@@ -63,6 +63,11 @@ public abstract class LoadMoreView {
         }
     }
 
+    /**
+     * 设置view可见性
+     * @param holder
+     * @param visible
+     */
     private void visibleLoading(PureViewHolder holder, boolean visible) {
         holder.setVisible(getLoadingViewId(), visible);
     }
