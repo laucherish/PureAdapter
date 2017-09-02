@@ -164,7 +164,6 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
         return mLoading;
     }
 
-
     /**
      * Refresh end, no more data
      */
