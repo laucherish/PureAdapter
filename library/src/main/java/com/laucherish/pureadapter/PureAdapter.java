@@ -113,6 +113,11 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
         mLoading = false;
     }
 
+    /**
+     * 设置加载更多监听器，要避免RecyclerView崩溃
+     * @param requestLoadMoreListener
+     * @param recyclerView
+     */
     public void setOnLoadMoreListener(RequestLoadMoreListener requestLoadMoreListener, RecyclerView recyclerView) {
         openLoadMore(requestLoadMoreListener);
         if (getRecyclerView() == null) {
