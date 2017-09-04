@@ -252,6 +252,40 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
         return mLoadMoreEnable;
     }
 
+    private int mPreLoadNumber = 1;
+
+    public void setPreLoadNumber(int preLoadNumber) {
+        if (preLoadNumber > 1) {
+            mPreLoadNumber = preLoadNumber;
+        }
+    }
+
+    private void autoLoadMore(int position) {
+        if (getLoadMoreViewCount() == 0) {
+            return;
+        }
+        if (position < getItemCount() - mPreLoadNumber) {
+            return;
+        }
+        if (mLoadMoreView.getLoadMoreStatus() != LoadMoreView.STATUS_DEFAULT) {
+            return;
+        }
+        mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_LOADING);
+        if (!mLoading) {
+            mLoading = true;
+            if (getRecyclerView() != null) {
+                getRecyclerView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRequestLoadMoreListener.onLoadMoreRequested();
+                    }
+                });
+            } else {
+                mRequestLoadMoreListener.onLoadMoreRequested();
+            }
+        }
+    }
+
     public int getHeaderLayoutCount() {
         if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
             return 0;
@@ -368,6 +402,8 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
 
     @Override
     public void onBindViewHolder(PureViewHolder holder, int position) {
+        //Do not move position, need to change before LoadMoreView binding
+        autoLoadMore(position);
         int viewType = holder.getItemViewType();
         switch (viewType) {
             case 0:
