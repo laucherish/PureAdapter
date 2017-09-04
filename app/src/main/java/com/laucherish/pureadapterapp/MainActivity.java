@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private int mRowNumber;
     private int mPageIndex;
+    private MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRowNumber = 20;
-        MyAdapter myAdapter = new MyAdapter();
+        myAdapter = new MyAdapter();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(myAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -30,20 +31,39 @@ public class MainActivity extends AppCompatActivity {
         myAdapter.setOnLoadMoreListener(new PureAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
-                getData(mPageIndex);
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setData(mPageIndex);
+                    }
+                }, 1000);
+
             }
         }, mRecyclerView);
 
-        myAdapter.setNewData(getData(1));
+        setData(1);
     }
 
-    private List<String> getData(int page){
+    private void setData(int page) {
         mPageIndex = page;
         List<String> list = new ArrayList<>();
-        for (int i=0;i<mRowNumber;i++) {
-            list.add("This is page:" + page + ", row:" + i);
+
+        if (page < 5) {
+            for (int i = 0; i < mRowNumber; i++) {
+                list.add("This is page:" + page + ", row:" + i);
+            }
+        }
+
+        if (page == 1) {
+            myAdapter.setNewData(list);
+        } else {
+            myAdapter.addData(list);
+            myAdapter.loadMoreComplete();
+        }
+
+        if (list.isEmpty()) {
+            myAdapter.loadMoreEnd();
         }
         mPageIndex++;
-        return list;
     }
 }
