@@ -1,6 +1,7 @@
 package com.laucherish.pureadapterapp;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +17,26 @@ public class MainActivity extends AppCompatActivity {
     private int mRowNumber;
     private int mPageIndex;
     private MyAdapter myAdapter;
+    private SwipeRefreshLayout mRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setData(1);
+                    }
+                }, 3000);
+            }
+        });
 
         mRowNumber = 20;
         myAdapter = new MyAdapter();
@@ -36,15 +52,24 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         setData(mPageIndex);
                     }
-                }, 1000);
+                }, 2000);
 
             }
         }, mRecyclerView);
 
-        setData(1);
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setData(1);
+            }
+        }, 3000);
+
     }
 
     private void setData(int page) {
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
         mPageIndex = page;
         List<String> list = new ArrayList<>();
 
