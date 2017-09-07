@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 setData(1);
             }
         }, 3000);
-
     }
 
     private void setData(int page) {
