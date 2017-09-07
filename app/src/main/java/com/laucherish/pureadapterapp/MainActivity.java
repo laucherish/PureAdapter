@@ -5,6 +5,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.laucherish.pureadapter.PureAdapter;
 
@@ -36,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
                 }, 3000);
             }
         });
+        mRefreshLayout.setRefreshing(true);
 
         mRowNumber = 20;
         myAdapter = new MyAdapter();
+        View headerView = LayoutInflater.from(this).inflate(R.layout.view_my_header, null);
+        myAdapter.addHeaderView(headerView);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(myAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
