@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 mRecyclerView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
