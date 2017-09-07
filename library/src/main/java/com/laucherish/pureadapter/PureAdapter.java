@@ -332,7 +332,7 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
 
     @Override
     public PureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        PureViewHolder viewHolder = null;
+        PureViewHolder viewHolder;
         this.mContext = parent.getContext();
         this.mLayoutInflater = LayoutInflater.from(mContext);
         switch (viewType) {
