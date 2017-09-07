@@ -84,6 +84,12 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
         mRecyclerView = recyclerView;
     }
 
+    private void checkNotNull() {
+        if (getRecyclerView() == null) {
+            throw new RuntimeException("please bind recyclerView first!");
+        }
+    }
+
     public void setNewData(List<T> data) {
         this.mData = data == null ? new ArrayList<T>() : data;
         if (mRequestLoadMoreListener != null) {
@@ -537,9 +543,7 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
      * 下拉加载更多回调接口
      */
     public interface RequestLoadMoreListener {
-
         void onLoadMoreRequested();
-
     }
 
     /**
@@ -767,5 +771,89 @@ public abstract class PureAdapter<T> extends RecyclerView.Adapter<PureViewHolder
             return getHeaderLayoutCount() + mData.size();
         }
         return -1;
+    }
+
+
+
+    public void setEmptyView(int layoutResId, ViewGroup viewGroup) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutResId, viewGroup, false);
+        setEmptyView(view);
+    }
+
+    /**
+     * bind recyclerView before use!
+     *
+     */
+    public void setEmptyView(int layoutResId) {
+        checkNotNull();
+        setEmptyView(layoutResId, getRecyclerView());
+    }
+
+    public void setEmptyView(View emptyView) {
+        boolean insert = false;
+        if (mEmptyLayout == null) {
+            mEmptyLayout = new FrameLayout(emptyView.getContext());
+            final RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT);
+            final ViewGroup.LayoutParams lp = emptyView.getLayoutParams();
+            if (lp != null) {
+                layoutParams.width = lp.width;
+                layoutParams.height = lp.height;
+            }
+            mEmptyLayout.setLayoutParams(layoutParams);
+            insert = true;
+        }
+        mEmptyLayout.removeAllViews();
+        mEmptyLayout.addView(emptyView);
+        mIsUseEmpty = true;
+        if (insert) {
+            if (getEmptyViewCount() == 1) {
+                int position = 0;
+                if (mHeadAndEmptyEnable && getHeaderLayoutCount() != 0) {
+                    position++;
+                }
+                notifyItemInserted(position);
+            }
+        }
+    }
+
+    /**
+     * Call before {@link RecyclerView#setAdapter(RecyclerView.Adapter)}
+     *
+     * @param isHeadAndEmpty false will not show headView if the data is empty true will show emptyView and headView
+     */
+    public void setHeaderAndEmpty(boolean isHeadAndEmpty) {
+        setHeaderFooterEmpty(isHeadAndEmpty, false);
+    }
+
+    /**
+     * set emptyView show if adapter is empty and want to show headview and footview
+     * Call before {@link RecyclerView#setAdapter(RecyclerView.Adapter)}
+     *
+     * @param isHeadAndEmpty
+     * @param isFootAndEmpty
+     */
+    public void setHeaderFooterEmpty(boolean isHeadAndEmpty, boolean isFootAndEmpty) {
+        mHeadAndEmptyEnable = isHeadAndEmpty;
+        mFootAndEmptyEnable = isFootAndEmpty;
+    }
+
+    /**
+     * Set whether to use empty view
+     *
+     * @param isUseEmpty
+     */
+    public void isUseEmpty(boolean isUseEmpty) {
+        mIsUseEmpty = isUseEmpty;
+    }
+
+    /**
+     * When the current adapter is empty, the BaseQuickAdapter can display a special view
+     * called the empty view. The empty view is used to provide feedback to the user
+     * that no data is available in this AdapterView.
+     *
+     * @return The view to show if the adapter is empty.
+     */
+    public View getEmptyView() {
+        return mEmptyLayout;
     }
 }
