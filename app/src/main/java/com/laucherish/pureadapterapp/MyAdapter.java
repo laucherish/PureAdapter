@@ -16,5 +16,6 @@ public class MyAdapter extends PureAdapter<String> {
     @Override
     protected void convert(PureViewHolder helper, String item) {
         helper.setText(R.id.tv_title, item);
+
     }
 }
